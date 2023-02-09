@@ -1,0 +1,48 @@
+---
+import { Image } from '@astrojs/image/components';
+
+export interface Props {
+  image: string;
+  title: string;
+  description: string;
+  author: string;
+  date: string | Date;
+  slug: string;
+  tag: string;
+}
+
+const { date, description, image, title, slug, tag } = Astro.props;
+---
+
+<a href={`/blog/${slug}`}>
+  <div
+    class="card image-full cursor-pointer bg-base-100 shadow-md transition-all hover:scale-[1.05] hover:shadow-2xl focus-visible:shadow-2xl xs:max-w-[350px] sm:max-w-full sm:card-compact"
+  >
+    <figure>
+      <Image
+        src={image}
+        alt={description}
+        fit="cover"
+        width={1200}
+        height={0}
+        aspectRatio="3:1"
+        format="webp"
+      />
+    </figure>
+    <div class="card-body gap-8">
+      <date class="font-mono text-slate-400">
+        {
+          date.toLocaleString('en-US', {
+            dateStyle: 'long',
+            formatMatcher: 'best fit',
+          })
+        }
+      </date>
+      <h2 class="card-title font-mono text-2xl uppercase md:text-3xl">
+        {title}
+      </h2>
+      <p class="prose">{description}</p>
+      <div class="badge-ghost badge">{tag}</div>
+    </div>
+  </div>
+</a>

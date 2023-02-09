@@ -1,0 +1,61 @@
+---
+import PostPreview from '@components/PostPreview.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog'))
+  .sort(
+    //@ts-ignore
+    (a, b) => new Date(b.data.pubDate) - new Date(a.data.pubDate)
+  )
+  .slice(0, 3);
+---
+
+<BaseLayout title="Daniel Dev" description="Welcome to my blog!">
+  <main
+    class="md:y-8 container relative mx-auto min-h-full max-w-[1200px] p-4 md:px-0"
+  >
+    <section
+      class="prose-h1:trackin-wide prose sm:prose-h1:text-5xl sm:prose-p:text-2xl md:prose-h1:text-6xl md:prose-p:text-2xl"
+    >
+      <h1 class="">
+        <span
+          class="bg-gradient-to-l from-red-600 via-blue-600 to-purple-600 bg-clip-text font-extrabold text-transparent"
+          >Web Development</span
+        >
+        <br /> with <span
+          class="bg-gradient-to-r from-red-600 via-blue-600 to-purple-600 bg-clip-text font-extrabold text-transparent sm:text-5xl md:text-6xl"
+          >Daniel</span
+        >
+      </h1>
+      <p>
+        A blog about coding, technology, and my journey as a developer. Sharing
+        my experiences, thoughts, and what I'm learning along the way.
+      </p>
+    </section>
+
+    <section class="my-12">
+      <h2
+        class="my-8 text-3xl font-extrabold uppercase tracking-wider text-primary-focus underline -outline-offset-8"
+      >
+        Latest Posts
+      </h2>
+
+      <div
+        class="flex max-h-[400px] items-center gap-4 overflow-x-scroll md:overflow-auto"
+      >
+        {
+          posts.map((post) => (
+            <PostPreview
+              description={post.data.description}
+              image={post.data.heroImage}
+              slug={post.slug}
+              title={post.data.title}
+              tag={post.data.tags}
+            />
+          ))
+        }
+      </div>
+    </section>
+  </main>
+</BaseLayout>

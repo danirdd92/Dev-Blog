@@ -1,0 +1,66 @@
+---
+import { CollectionEntry, getCollection } from 'astro:content';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { Image } from '@astrojs/image/components';
+
+export async function getStaticPaths() {
+  const posts = (await getCollection('blog')).sort(
+    (a, b) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf()
+  );
+
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+export interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+const { description, heroImage, pubDate } = post.data;
+const { Content } = await post.render();
+
+type Post = CollectionEntry<'blog'>;
+
+const relatedPosts = (await getCollection('blog'))
+  .reduce((acc: Post[], currPost) => {
+    if (currPost.data.tags === post.data.tags) {
+      acc.push(currPost);
+    }
+    return acc;
+  }, [])
+  .slice(0, 3);
+---
+
+<BaseLayout title={post.data.title} description={post.data.description}>
+  <div
+    class="sm prose-lg prose mx-auto justify-self-end px-4 pb-8 xs:min-w-fit md:min-w-[760px]"
+  >
+    <div class="mx-4">
+      <h1 class="mb-2 p-0 uppercase xs:text-3xl sm:text-4xl">
+        {post.data.title}
+      </h1>
+      <date>
+        {
+          pubDate.toLocaleString('en-US', {
+            dateStyle: 'long',
+            formatMatcher: 'best fit',
+          })
+        }
+      </date>
+    </div>
+
+    <Image
+      src={heroImage}
+      alt={description}
+      width={1200}
+      height={0}
+      aspectRatio="16:9"
+    />
+    <div class="divider"></div>
+    <article class="mx-4">
+      <Content />
+    </article>
+  </div>
+</BaseLayout>

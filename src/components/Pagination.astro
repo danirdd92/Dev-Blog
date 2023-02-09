@@ -1,0 +1,33 @@
+---
+import { Icon } from 'astro-icon';
+
+export interface Props {
+  prevUrl: string;
+  nextUrl: string;
+  currentPage: number;
+}
+
+const { prevUrl, nextUrl, currentPage } = Astro.props;
+---
+
+<nav
+  class="btn-group mt-4 flex items-center justify-center"
+  aria-label="pagination buttons"
+>
+  {
+    prevUrl && (
+      <a class="btn flex min-w-[100px]" href={prevUrl}>
+        <Icon name="tabler:arrow-narrow-left" class="w-[40px]" />
+      </a>
+    )
+  }
+  <button tabindex="-1" class="btn">Page {currentPage}</button>
+
+  {
+    nextUrl && (
+      <a class="btn min-w-[100px]" href={nextUrl}>
+        <Icon name="tabler:arrow-narrow-right" class="w-[40px]" />
+      </a>
+    )
+  }
+</nav>

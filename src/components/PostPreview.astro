@@ -1,0 +1,36 @@
+---
+import { Image } from '@astrojs/image/components';
+
+export interface Props {
+  image: string;
+  title: string;
+  description: string;
+  slug: string;
+  tag: string;
+}
+
+const { description, image, title, slug, tag } = Astro.props;
+---
+
+<a href={`/blog/${slug}`}>
+  <article class="card image-full min-h-[250px] cursor-pointer">
+    <figure>
+      <Image
+        src={image}
+        alt={description}
+        fit="cover"
+        height={400}
+        width={0}
+        aspectRatio="3:1"
+        format="webp"
+      />
+    </figure>
+    <div class="card-body flex flex-col justify-between gap-8">
+      <h2 class="text-1xl card-title font-mono uppercase md:text-2xl">
+        {title}
+      </h2>
+
+      <div class="badge-ghost badge">{tag}</div>
+    </div>
+  </article>
+</a>
